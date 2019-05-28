@@ -1,0 +1,43 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "webserver.fullname" . }}
+  labels:
+    app: {{ template "webserver.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: {{ .Values.webserver.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "webserver.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "webserver.fullname" . }}
+    spec:
+      containers:
+        - name: {{ .Values.webserver.containername }}
+          image: {{ .Values.webserver.image.repository }}
+          imagePullPolicy: {{ .Values.webserver.image.pullPolicy }}
+          env:
+            - name: MYSQL_HOST
+              value: {{ template "myapplication.fullname" . }}.default.svc.cluster.local
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: dbname
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: password
+          ports:
+          - containerPort: 80

@@ -1,0 +1,55 @@
+# Default values for mysql.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+mysql:
+  replicaCount: 1
+
+  image:
+    repository: mysql:8.0
+    pullPolicy: Never
+
+  containername: mysql
+
+  secrets:
+    # root password for MYSQL
+    # password is "rElayrmy$ql", base64 created
+    rootpw: rElayrmysq
+
+    # database name
+    # database name is mydb, base64 created
+    dbname: mydb
+
+    # user for MYSQL
+    # username is testuser, base64 created
+    user: testuser
+
+    # user password for MYSQL
+    # password is tEstUsEr, base64 created
+    password: tEstUsEr
+
+  persistence:
+    accessMode: ReadWriteMany
+    size: 1Gi
+    pvsize: 2Gi
+    pvcname: mysql-pvc
+    storageClassName: standard
+
+  service:
+    type: ClusterIP
+    port: 3306
+    targetPort: 3306
+
+webserver:
+  replicaCount: 3
+
+  image:
+    repository: webserver:apache
+    pullPolicy: Never
+
+  containername: php-apache
+
+  service:
+    type: LoadBalancer
+    port: 80  
+

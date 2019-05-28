@@ -1,0 +1,39 @@
+SOLUTION 1
+*******************************************************************************************************************
+
+STEP I] Create docker file 
+        Run Command: cd webserver; docker build -t webserver:apache .
+        Run Command: cd mysql; docker build -t mysql:8.0 .
+
+STEP II] Create our appplication by deploying secrets, pv, pvc, deployments and services using single script.
+         Run Command: ./script.sh
+
+STEP III]  How to access application inside cluster--> 
+           Get IP:Port from command: "minikube service list"
+           Run Command: curl IP:port
+
+STEP IV]  How to access application outside cluster --> 
+          Get Port number of webserver-service --> "kubectl get service"
+          Go to browser --> Your node IP:Port
+
+********************************************************************************************************************
+
+SOLUTION 2 --> Using HELM CHARTS
+
+********************************************************************************************************************
+
+STEP I] Create docker image
+   Run Command: cd webserver; docker build -t webserver:apache .
+   Run Command: cd mysql; docker build -t mysql:8.0 .
+
+STEP II] Create our application stack using single helm command
+         Run Command: helm install myapplication --generate-name
+
+STEP III]  How to access application inside cluster-->
+           Get IP:Port from command: "minikube service list"
+           Run Command: curl IP:port
+
+STEP IV]  How to access application outside cluster -->
+          Get Port number of webserver-service --> "kubectl get service"
+          Go to browser --> Your node IP:Port
+
